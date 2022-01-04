@@ -22,41 +22,33 @@
 
         $sql = "SELECT id, uemail, uname FROM accounts";
         $result = $conn->query($sql);
-        /*
-        $i = 0;
-        while ($i < 3){
-            $row = $result->fetch_array(MYSQLI_BOTH);
-            echo $row["uemail"];
-            $i++;
-        }*/
         //user info validation makes sure the passwords match, the username is available and the email is available
+        //makes sure that there are rows in the table
         if ($result->num_rows > 0) {
-            // output data of each row
-            $success = FALSE;
+            //if success is true at the end then there were no issues
+            $success = TRUE;
+            //loops through each row
             for($i = 0; $i < $result->num_rows; $i++) {
-                echo $i;
                 $row = $result->fetch_array(MYSQLI_BOTH);
                 //checks to make sure the username and email are not already in use
-                echo $row["uemail"];
-                echo $email;
                 if($row["uemail"] == $email)
                 {
                     header("Location: failedcreateinuse.php");
-                    $success = TRUE;
+                    $success = FALSE;
                 }
                 elseif($row["uname"] == $username)
                 {
                     header("Location: failedcreateinuse.php");
-                    $success = TRUE;
+                    $success = FALSE;
                 }
                 //checks to make sure the passwords are the same
                 elseif($password != $passwordverify)
                 {
                     header("Location: failedcreatepassword.php");
-                    $success = TRUE;
+                    $success = FALSE;
                 }
             }
-            if (!$success){
+            if ($success){
                 // sql to add new user to the database
                 $sql = "INSERT INTO accounts (uname, ufname, ulname, uemail, upassword)
                 VALUES ('$username', '$fname', '$lname', '$email', '$password')";
